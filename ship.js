@@ -1,4 +1,4 @@
-class Ship extends gameObject
+class Ship extends GameObject
 {
     constructor(position, size)
     {
@@ -13,7 +13,7 @@ class Ship extends gameObject
     {
         this.position.add(this.velocity);
         this.velocity.mult(0.97);
-        this.edges();
+        super.checkEdges();
         if(this.isBoosting)
         {
             this.boost();
@@ -34,11 +34,11 @@ class Ship extends gameObject
 
     display()
     {
-        translate(this.position.x, this.position.y);
-        rotate(this.heading + PI / 2);
-        noFill();
-        stroke(255);
-        triangle(-this.size, this.size, this.size, this.size, 0, -this.size)
+        push();
+            translate(this.position.x, this.position.y);
+            rotate(this.heading + PI / 2);
+            triangle(-this.size, this.size, this.size, this.size, 0, -this.size);
+        pop();
     }
 
     setRotation(rotation)
@@ -49,26 +49,5 @@ class Ship extends gameObject
     turn(angle)
     {
         this.heading += this.rotation;
-    }
-
-    edges()
-    {
-        if(this.position.x > width + this.size)
-        {
-            this.position.x = -this.size;
-        }
-        else if(this.position.x < -this.size)
-        {
-            this.position.x = width + this.size;
-        }
-
-        if(this.position.y > height + this.size)
-        {
-            this.position.y = -this.size;
-        }
-        else if(this.position.y < -this.size)
-        {
-            this.position.y = height + this.size;
-        }
     }
 }

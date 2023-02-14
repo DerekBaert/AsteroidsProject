@@ -1,18 +1,23 @@
 let ship;
+let asteroids = [];
 
 function setup() 
 {
-  createCanvas(windowWidth,windowHeight);
-
-  ship = new Ship(createVector(width / 2, height / 2), 20);
+  createCanvas(600,600);
+  ship = new Ship(createVector(width / 2, height / 2), 10);
+  asteroids.push(new Asteroid(createVector(random(width), random(height)), 50));
 }
 
 function draw() 
 {
+  noFill();
+  stroke(255);
   background(0);
   ship.display();
   ship.turn();
   ship.update();
+
+  asteroids.forEach(function(asteroid){asteroid.display();});
 }
 
 function keyPressed() 
