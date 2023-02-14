@@ -1,9 +1,8 @@
 class gameObject
 {
-    constructor(size, position, velocity)
+    constructor(position, size)
     {
         this.size = size;
         this.position = position;
-        this.velocity = velocity;
     }
 }

@@ -2,9 +2,9 @@ let ship;
 
 function setup() 
 {
-  createCanvas(500,500);
+  createCanvas(windowWidth,windowHeight);
 
-  ship = new Ship(createVector(250,250),10);
+  ship = new Ship(createVector(width / 2, height / 2), 20);
 }
 
 function draw() 
@@ -12,6 +12,7 @@ function draw()
   background(0);
   ship.display();
   ship.turn();
+  ship.update();
 }
 
 function keyPressed() 
@@ -24,11 +25,16 @@ function keyPressed()
   {
     ship.setRotation(-0.1);
   }
+  else if (keyCode == UP_ARROW)
+  {
+    ship.boosting(true);
+  }
 }
 
 function keyReleased()
 {
   ship.setRotation(0);
+  ship.boosting(false);
 }
 
 
