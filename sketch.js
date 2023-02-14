@@ -1,11 +1,16 @@
 let ship;
+let asteroidCount = 5;
 let asteroids = [];
 
 function setup() 
 {
   createCanvas(600,600);
   ship = new Ship(createVector(width / 2, height / 2), 10);
-  asteroids.push(new Asteroid(createVector(random(width), random(height)), 50));
+  for(let i = 0; i < asteroidCount; i++)
+  {
+    let size =  random(20, 50);
+    asteroids.push(new Asteroid(createVector(random(size, width - size), random(size, height - size)), size));
+  }  
 }
 
 function draw() 
@@ -17,7 +22,11 @@ function draw()
   ship.turn();
   ship.update();
 
-  asteroids.forEach(function(asteroid){asteroid.display();});
+  asteroids.forEach(function(asteroid)
+  {
+    asteroid.display(); 
+    asteroid.update();
+  });
 }
 
 function keyPressed() 

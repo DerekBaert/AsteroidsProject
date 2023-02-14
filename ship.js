@@ -23,7 +23,7 @@ class Ship extends GameObject
     boost()
     {
         let force = p5.Vector.fromAngle(this.heading);
-        force.mult(0.5);
+        force.mult(0.35);
         this.velocity.add(force);
     }
 
