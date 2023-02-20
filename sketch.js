@@ -7,9 +7,10 @@ function setup()
 {
   createCanvas(600,600);
   ship = new Ship(createVector(width / 2, height / 2), 10);
+
   for(let i = 0; i < asteroidCount; i++)
   {
-    let size =  random(20, 50);
+    let size =  50;
     asteroids.push(new Asteroid(createVector(random(size, width - size), random(size, height - size)), size));
   }  
 }
@@ -22,30 +23,40 @@ function draw()
 
   for(let i = 0; i < asteroids.length; i++)
   {
-    asteroids[i].display(); 
-    asteroids[i].update();
+    if(asteroids[i].size > 10)
+    {
+      asteroids[i].display(); 
+      asteroids[i].update();
+    }    
+    else
+    {
+      asteroids.splice(i, 1);
+    }
   }
 
   for(let i = lasers.length - 1; i >= 0; i--)
   {
-    lasers[i].display(); 
-    lasers[i].update();
-    for(let j = asteroids.length - 1; j >=0; j--)
+    if(lasers[i].checkEdges())
     {
-      if(lasers[i].hits(asteroids[j]))
-      {
-        let newAsteroids = asteroids[j].break();
-        //asteroids.push(newAsteroids);
-        asteroids.splice(j, 1);
-        lasers.splice(i,1);
-        break;
-      }
+      splice(i,1);
     }
+    else
+    {
+      lasers[i].display(); 
+      lasers[i].update();
+      for(let j = asteroids.length - 1; j >=0; j--)
+      {
+        if(lasers[i].hits(asteroids[j]))
+        {
+          let newAsteroids = asteroids[j].break();
+          asteroids = asteroids.concat(newAsteroids);
+          asteroids.splice(j, 1);
+          lasers.splice(i,1);
+          break;
+        }
+      }
+    }    
   }
-  lasers.forEach(function(laser)
-  {
-    
-  });
   
   ship.display();
   ship.turn();

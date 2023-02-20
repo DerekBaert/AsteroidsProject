@@ -8,7 +8,7 @@ class Asteroid extends GameObject
         this.velocity = p5.Vector.random2D();
         for(let i = 0; i < this.total; i++)
         {
-            this.offset[i] = random(-10,10);
+            this.offset[i] = random(-this.size,this.size);
         }
     }
 
@@ -38,8 +38,8 @@ class Asteroid extends GameObject
     break()
     {
         let newAsteroids = [];
-        newAsteroids[0] = new Asteroid(this.position);
-        newAsteroids[1] = new Asteroid(this.position);
+        newAsteroids[0] = new Asteroid(this.position, this.size / 2);
+        newAsteroids[1] = new Asteroid(this.position, this.size / 2);
         return newAsteroids;
     }
 }

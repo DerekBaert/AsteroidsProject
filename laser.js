@@ -26,4 +26,9 @@ class Laser
         let distance = dist(this.position.x, this.position.y, object.position.x, object.position.y);
         return distance < object.size;
     }
+
+    checkEdges()
+    {
+        return (this.position.x >= width || this.position.x <= 0 || this.position.y >= height || this.position.y <= 0)
+    }
 }
