@@ -2,17 +2,21 @@ let ship;
 let asteroidCount = 5;
 let asteroids = [];
 let lasers = [];
+let lives = 3;
+let score = 0;
 
 function setup() 
 {
   createCanvas(600,600);
   ship = new Ship(createVector(width / 2, height / 2), 10);
 
-  for(let i = 0; i < asteroidCount; i++)
+  for(let i = 0; i < asteroidCount / 2; i++)
   {
-    let size =  50;
-    asteroids.push(new Asteroid(createVector(random(size, width - size), random(size, height - size)), size));
+    let size = 40;
+    asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
+    asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
   }  
+  
 }
 
 function draw() 
@@ -23,8 +27,12 @@ function draw()
 
   for(let i = 0; i < asteroids.length; i++)
   {
-    if(asteroids[i].size > 10)
+    if(asteroids[i].size >= 10)
     {
+      if(ship.hits(asteroids[i]))
+      {
+          lives--;
+      }
       asteroids[i].display(); 
       asteroids[i].update();
     }    
@@ -48,6 +56,19 @@ function draw()
       {
         if(lasers[i].hits(asteroids[j]))
         {
+          console.log(asteroids[j].size);
+          if(asteroids[j].size == 40)
+          {
+            score += 20;
+          }
+          else if(asteroids[j].size >= 20)
+          {
+            score += 50;
+          }
+          else
+          {
+            score += 100;
+          }
           let newAsteroids = asteroids[j].break();
           asteroids = asteroids.concat(newAsteroids);
           asteroids.splice(j, 1);
@@ -57,10 +78,25 @@ function draw()
       }
     }    
   }
-  
-  ship.display();
-  ship.turn();
-  ship.update();
+
+  if(lives > 0)
+  {
+    ship.display();
+    ship.turn();
+    ship.update();
+  }  
+  else
+  {
+    push();
+      textAlign(CENTER);
+      fill(255);
+      textSize(50);
+      text("Game Over", width / 2, height /2);
+    pop();
+  }
+
+  text(`Lives: ${lives}`, 20, 20);
+  text(`Score: ${score}`, width - 75, 20);
 }
 
 function keyPressed() 

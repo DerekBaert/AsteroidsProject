@@ -51,4 +51,10 @@ class Ship extends GameObject
     {
         this.heading += this.rotation;
     }
+
+    hits(object)
+    {
+        let distance = dist(this.position.x, this.position.y, object.position.x, object.position.y);
+        return distance < (object.size + this.size);
+    }
 }
