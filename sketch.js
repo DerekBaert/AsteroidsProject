@@ -32,6 +32,7 @@ function draw()
       if(ship.hits(asteroids[i]))
       {
           lives--;
+          ship.respawn();
       }
       asteroids[i].display(); 
       asteroids[i].update();
@@ -117,6 +118,10 @@ function keyPressed()
   else if (keyCode == UP_ARROW)
   {
     ship.boosting(true);
+  }
+  else if(keyCode == SHIFT)
+  {
+    ship.warp();
   }
 }
 

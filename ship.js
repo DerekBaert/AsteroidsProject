@@ -57,4 +57,16 @@ class Ship extends GameObject
         let distance = dist(this.position.x, this.position.y, object.position.x, object.position.y);
         return distance < (object.size + this.size);
     }
+
+    respawn()
+    {
+        this.position = createVector(width/2, height/2);
+        this.velocity = createVector(0,0);
+    }
+
+    warp()
+    {
+        this.position = createVector(random(0, width - this.size), random(0, height - this.size));
+        this.velocity = createVector(0,0);
+    }
 }
