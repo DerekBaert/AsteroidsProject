@@ -106,6 +106,7 @@ function keyPressed()
   if(key == ' ')
   {
     lasers.push(new Laser(ship.position, ship.heading));
+    ship.fire();
   }
   else if(keyCode == RIGHT_ARROW) 
   {

@@ -32,6 +32,13 @@ class Ship extends GameObject
         this.isBoosting = isBoosting;
     }
 
+    fire()
+    {
+        let force = p5.Vector.fromAngle(this.heading);
+        force.mult(-0.35);
+        this.velocity.add(force); 
+    }
+
     display()
     {
         push();
