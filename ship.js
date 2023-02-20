@@ -35,6 +35,7 @@ class Ship extends GameObject
     display()
     {
         push();
+            fill(0);
             translate(this.position.x, this.position.y);
             rotate(this.heading + PI / 2);
             triangle(-this.size, this.size, this.size, this.size, 0, -this.size);

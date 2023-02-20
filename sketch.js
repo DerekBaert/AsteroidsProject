@@ -1,6 +1,7 @@
 let ship;
 let asteroidCount = 5;
 let asteroids = [];
+let lasers = [];
 
 function setup() 
 {
@@ -17,21 +18,48 @@ function draw()
 {
   noFill();
   stroke(255);
-  background(0);
+  background(0); 
+
+  for(let i = 0; i < asteroids.length; i++)
+  {
+    asteroids[i].display(); 
+    asteroids[i].update();
+  }
+
+  for(let i = lasers.length - 1; i >= 0; i--)
+  {
+    lasers[i].display(); 
+    lasers[i].update();
+    for(let j = asteroids.length - 1; j >=0; j--)
+    {
+      if(lasers[i].hits(asteroids[j]))
+      {
+        let newAsteroids = asteroids[j].break();
+        //asteroids.push(newAsteroids);
+        asteroids.splice(j, 1);
+        lasers.splice(i,1);
+        break;
+      }
+    }
+  }
+  lasers.forEach(function(laser)
+  {
+    
+  });
+  
   ship.display();
   ship.turn();
   ship.update();
-
-  asteroids.forEach(function(asteroid)
-  {
-    asteroid.display(); 
-    asteroid.update();
-  });
 }
 
 function keyPressed() 
 {
-  if(keyCode == RIGHT_ARROW) 
+
+  if(key == ' ')
+  {
+    lasers.push(new Laser(ship.position, ship.heading));
+  }
+  else if(keyCode == RIGHT_ARROW) 
   {
     ship.setRotation(0.1);
   } 

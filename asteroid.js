@@ -22,7 +22,6 @@ class Asteroid extends GameObject
     {
         push();
             translate(this.position.x, this.position.y);
-            //ellipse(0, 0, this.size * 2);
             beginShape();
             for(let i = 0; i < this.total; i++)
             {
@@ -34,5 +33,13 @@ class Asteroid extends GameObject
             }
             endShape(CLOSE);
         pop();
+    }
+
+    break()
+    {
+        let newAsteroids = [];
+        newAsteroids[0] = new Asteroid(this.position);
+        newAsteroids[1] = new Asteroid(this.position);
+        return newAsteroids;
     }
 }
