@@ -4,8 +4,9 @@ let asteroids = [];
 let lasers = [];
 let lives = 3;
 let score = 0;
-let saucer;
-let saucerSpawn = 100;
+let saucers = [];
+let nextSaucer = 250;
+let saucerRate = 250;
 let nextLife = 10000;
 
 function setup() 
@@ -19,7 +20,6 @@ function setup()
     asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
     asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
   }  
-  
 }
 
 function draw() 
@@ -28,10 +28,11 @@ function draw()
   stroke(255);
   background(0); 
 
-  if(score > saucerSpawn)
+  if(score > nextSaucer)
   {
-    saucer = new Saucer(random(20,60));
-    saucerSpawn += 100;
+    let saucerSize = 
+    saucers.push(new Saucer(random(20,60)));
+    nextSaucer += saucerRate;
   }
 
   for(let i = 0; i < asteroids.length; i++)
@@ -95,11 +96,11 @@ function draw()
     ship.display();
     ship.turn();
     ship.update();
-    if(saucer)
+    for(let i = 0; i < saucers.length; i++)
     {
-      saucer.display();
-      saucer.update();
-    }
+      saucers[i].display();
+      saucers[i].update();
+    }    
   }  
   else
   {
