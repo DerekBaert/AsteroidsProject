@@ -4,6 +4,9 @@ let asteroids = [];
 let lasers = [];
 let lives = 3;
 let score = 0;
+let saucer;
+let saucerSpawn = 100;
+let nextLife = 10000;
 
 function setup() 
 {
@@ -24,6 +27,12 @@ function draw()
   noFill();
   stroke(255);
   background(0); 
+
+  if(score > saucerSpawn)
+  {
+    saucer = new Saucer(random(20,60));
+    saucerSpawn += 100;
+  }
 
   for(let i = 0; i < asteroids.length; i++)
   {
@@ -74,17 +83,23 @@ function draw()
           asteroids = asteroids.concat(newAsteroids);
           asteroids.splice(j, 1);
           lasers.splice(i,1);
+          checkLifeGain();
           break;
         }
       }
     }    
   }
-
+  
   if(lives > 0)
   {
     ship.display();
     ship.turn();
     ship.update();
+    if(saucer)
+    {
+      saucer.display();
+      saucer.update();
+    }
   }  
   else
   {
@@ -132,4 +147,12 @@ function keyReleased()
   ship.boosting(false);
 }
 
+function checkLifeGain()
+{
+  if(score > nextLife)
+  {
+    lives += 1;
+    nextLife += 10000;
+  }
+}
 
