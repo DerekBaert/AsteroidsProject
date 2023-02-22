@@ -54,7 +54,7 @@ class Ship extends GameObject
         this.rotation = rotation;
     }
 
-    turn(angle)
+    turn()
     {
         this.heading += this.rotation;
     }

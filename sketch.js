@@ -1,12 +1,14 @@
 let ship;
-let asteroidCount = 5;
+let asteroidCount = 0;
 let asteroids = [];
 let lasers = [];
 let lives = 3;
 let score = 0;
 let saucers = [];
-let nextSaucer = 250;
+let nextSaucer = 0;
 let saucerRate = 250;
+let nextSmallSaucer = 1000;
+let smallSaucerInterval = 1000;
 let nextLife = 10000;
 
 function setup() 
@@ -28,11 +30,19 @@ function draw()
   stroke(255);
   background(0); 
 
-  if(score > nextSaucer)
+  if(score >= nextSaucer)
   {
-    let saucerSize = 
-    saucers.push(new Saucer(random(20,60)));
+    let saucerSize = 70;
+    if(score >= nextSmallSaucer)
+    {
+      saucerSize = 40;
+      nextSmallSaucer += smallSaucerInterval;
+    }
+    console.log(saucerSize);
+    let saucer = new Saucer(saucerSize);
+    saucers.push(saucer);
     nextSaucer += saucerRate;
+    
   }
 
   for(let i = 0; i < asteroids.length; i++)
@@ -96,10 +106,15 @@ function draw()
     ship.display();
     ship.turn();
     ship.update();
+    
     for(let i = 0; i < saucers.length; i++)
     {
       saucers[i].display();
       saucers[i].update();
+      if(round(millis()/1000) % 2 === 0 && frameCount % 60 === 0)
+      {
+        lasers.push(new Laser(saucers[i].position, saucers[i].heading));
+      }      
     }    
   }  
   else
@@ -122,6 +137,7 @@ function keyPressed()
   if(key == ' ')
   {
     lasers.push(new Laser(ship.position, ship.heading));
+    //console.log(ship.heading);
     ship.fire();
   }
   else if(keyCode == RIGHT_ARROW) 

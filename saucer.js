@@ -4,7 +4,7 @@ class Saucer
     {
         this.position = createVector(0 + size, random(0 + size, height / 2))
         this.heading = 0;
-        this.velocity = createVector(random(2, 4), random(1, 3));
+        this.velocity = createVector(random(1.5, 3), random(1, 2.5));
         this.size = size;
 
         if (floor(random(2))) 
@@ -22,7 +22,7 @@ class Saucer
     update()
     {
         this.position.add(this.velocity);
-        this.heading = atan2(ship.x - this.x, this.y - ship.y) - PI * 0.5;
+        this.heading = atan2(ship.position.x - this.position.x, this.position.y - ship.position.y) - PI / 2;
     }
 
     display()
