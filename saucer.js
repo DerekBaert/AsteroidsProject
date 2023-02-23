@@ -17,12 +17,43 @@ class Saucer
             this.velocity.y *= -1; 
             this.position.y = random(height / 2, height  - size);
         }
+
+        if(this.size == bigSaucerSize)
+        {
+            this.aimOffset = 0.5;
+        }
+        else
+        {
+            if(score < 1000)
+            {
+                this.aimOffset = 0.3;
+            }
+
+            if(score > 1000)
+            {
+                this.aimOffset = 0.2;
+            }
+
+            if(score > 1500)
+            {
+                this.aimOffset = 0.1;
+            }
+
+            if(score > 2000)
+            {
+                this.aimOffset = 0;
+            }            
+        }
     }
 
     update()
     {
         this.position.add(this.velocity);
         this.heading = atan2(ship.position.x - this.position.x, this.position.y - ship.position.y) - PI / 2;
+        if(this.aimOffset > 0)
+        {
+            this.heading += random(-this.aimOffset, this.aimOffset);
+        }        
     }
 
     hits(object)

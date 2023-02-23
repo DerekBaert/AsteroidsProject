@@ -11,15 +11,16 @@ let saucerRate = 250;
 let nextSmallSaucer = 1000;
 let smallSaucerInterval = 1000;
 let nextLife = 10000;
+let bigSaucerSize = 50;
+let smallSaucerSize = 25;
 
 function setup() 
 {
   createCanvas(600,600);
   ship = new Ship(createVector(width / 2, height / 2), 10);
-
   for(let i = 0; i < asteroidCount / 2; i++)
   {
-    let size = 40;
+    let size = floor(random(20,40));
     asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
     asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
   }  
@@ -33,10 +34,10 @@ function draw()
 
   if(score >= nextSaucer)
   {
-    let saucerSize = 50;
+    let saucerSize = bigSaucerSize;
     if(score >= nextSmallSaucer)
     {
-      saucerSize = 25;
+      saucerSize = smallSaucerSize;
       nextSmallSaucer += smallSaucerInterval;
     }
     console.log(saucerSize);
@@ -101,7 +102,7 @@ function draw()
           ship.respawn();
         }
 
-        if(round(millis()/100) % 2 === 0 && frameCount % 60 === 0)
+        if(frameCount % 60 === 0)
         {
           saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
         }   
@@ -221,6 +222,7 @@ function handleLasers(lasers)
       }
       if(lasers[i].hits(ship) && lasers[i].laserType != LaserType.Player)
       {
+        lasers.splice(i, 1);
         lives--;
         ship.respawn();
       }
