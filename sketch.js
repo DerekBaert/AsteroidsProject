@@ -33,10 +33,10 @@ function draw()
 
   if(score >= nextSaucer)
   {
-    let saucerSize = 70;
+    let saucerSize = 50;
     if(score >= nextSmallSaucer)
     {
-      saucerSize = 40;
+      saucerSize = 25;
       nextSmallSaucer += smallSaucerInterval;
     }
     console.log(saucerSize);
@@ -208,11 +208,11 @@ function handleLasers(lasers)
       {
         if(lasers[i].hits(saucers[j]) && lasers[i].laserType != LaserType.Enemy)
         {
-          if(saucers[j].size == 70)
+          if(saucers[j].size == 60)
           {
             score += 200;
           }
-          else if(saucers[j].size == 40)
+          else if(saucers[j].size == 30)
           {
             score += 1000;
           }
