@@ -1,14 +1,16 @@
 class Asteroid extends GameObject
 {
-    constructor(position, size)
+    constructor(position, size, velocity)
     {
         super(position, size);    
         this.total = floor(random(5,15));
         this.offset = [];
-        this.velocity = p5.Vector.random2D();
+        this.velocity = createVector(floor(random(-1,1)), floor(random(-1,1)));
+        this.velocity.mult(10 / this.size);
+        console.log(`Size: ${this.size} Mult: ${1 / this.size} Velocity:${this.velocity}`);
         for(let i = 0; i < this.total; i++)
         {
-            this.offset[i] = random(-this.size / 2,this.size / 2);
+            this.offset[i] = random(-this.size / 2, this.size / 2);
         }
     }
 

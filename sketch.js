@@ -20,7 +20,7 @@ function setup()
   ship = new Ship(createVector(width / 2, height / 2), 10);
   for(let i = 0; i < asteroidCount / 2; i++)
   {
-    let size = floor(random(20,40));
+    let size = floor(random(10,40));
     asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
     asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
   }  
