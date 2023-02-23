@@ -25,6 +25,12 @@ class Saucer
         this.heading = atan2(ship.position.x - this.position.x, this.position.y - ship.position.y) - PI / 2;
     }
 
+    hits(object)
+    {
+        let distance = dist(this.position.x, this.position.y, object.position.x, object.position.y);
+        return distance < (object.size + this.size);
+    }
+
     display()
     {
         ellipse(this.position.x, this.position.y, this.size, this.size / 2);

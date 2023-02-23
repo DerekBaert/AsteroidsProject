@@ -1,11 +1,12 @@
 let ship;
-let asteroidCount = 0;
+let asteroidCount = 5;
 let asteroids = [];
-let lasers = [];
+let playerLasers = [];
+let saucerLasers = [];
 let lives = 3;
 let score = 0;
 let saucers = [];
-let nextSaucer = 0;
+let nextSaucer = 250;
 let saucerRate = 250;
 let nextSmallSaucer = 1000;
 let smallSaucerInterval = 1000;
@@ -49,13 +50,24 @@ function draw()
   {
     if(asteroids[i].size >= 10)
     {
+      asteroids[i].display(); 
+      asteroids[i].update();
+
       if(ship.hits(asteroids[i]))
       {
           lives--;
           ship.respawn();
       }
-      asteroids[i].display(); 
-      asteroids[i].update();
+
+      for(let j = saucers.length - 1; j >= 0; j--)
+      {
+        if(saucers[j].hits(asteroids[i]))
+        {
+          saucers.splice(j, 1);
+          console.log("Saucer Crashed");
+        }
+      }
+      
     }    
     else
     {
@@ -63,43 +75,8 @@ function draw()
     }
   }
 
-  for(let i = lasers.length - 1; i >= 0; i--)
-  {
-    if(lasers[i].checkEdges())
-    {
-      splice(i,1);
-    }
-    else
-    {
-      lasers[i].display(); 
-      lasers[i].update();
-      for(let j = asteroids.length - 1; j >=0; j--)
-      {
-        if(lasers[i].hits(asteroids[j]))
-        {
-          console.log(asteroids[j].size);
-          if(asteroids[j].size == 40)
-          {
-            score += 20;
-          }
-          else if(asteroids[j].size >= 20)
-          {
-            score += 50;
-          }
-          else
-          {
-            score += 100;
-          }
-          let newAsteroids = asteroids[j].break();
-          asteroids = asteroids.concat(newAsteroids);
-          asteroids.splice(j, 1);
-          lasers.splice(i,1);
-          checkLifeGain();
-          break;
-        }
-      }
-    }    
-  }
+  handleLasers(playerLasers);
+  handleLasers(saucerLasers);
   
   if(lives > 0)
   {
@@ -109,12 +86,26 @@ function draw()
     
     for(let i = 0; i < saucers.length; i++)
     {
-      saucers[i].display();
-      saucers[i].update();
-      if(round(millis()/1000) % 2 === 0 && frameCount % 60 === 0)
+      if(saucers[i].checkEdges())
       {
-        lasers.push(new Laser(saucers[i].position, saucers[i].heading));
-      }      
+        saucers.splice(i,1);
+      }
+      else
+      {
+        saucers[i].display();
+        saucers[i].update();
+
+        if(ship.hits(saucers[i]))
+        {
+          lives--;
+          ship.respawn();
+        }
+
+        if(round(millis()/100) % 2 === 0 && frameCount % 60 === 0)
+        {
+          saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
+        }   
+      }       
     }    
   }  
   else
@@ -136,8 +127,7 @@ function keyPressed()
 
   if(key == ' ')
   {
-    lasers.push(new Laser(ship.position, ship.heading));
-    //console.log(ship.heading);
+    playerLasers.push(new Laser(ship.position, ship.heading, LaserType.Player));
     ship.fire();
   }
   else if(keyCode == RIGHT_ARROW) 
@@ -152,7 +142,7 @@ function keyPressed()
   {
     ship.boosting(true);
   }
-  else if(keyCode == SHIFT)
+  else if(keyCode == DOWN_ARROW)
   {
     ship.warp();
   }
@@ -173,3 +163,66 @@ function checkLifeGain()
   }
 }
 
+function handleLasers(lasers)
+{
+  for(let i = lasers.length - 1; i >= 0; i--)
+  {
+    if(lasers[i].checkEdges())
+    {
+      lasers.splice(i,1);
+    }
+    else
+    {
+      lasers[i].display(); 
+      lasers[i].update();
+      for(let j = asteroids.length - 1; j >=0; j--)
+      {
+        if(lasers[i].hits(asteroids[j]))
+        {
+          if(asteroids[j].size == 40)
+          {
+            score += 20;
+          }
+          else if(asteroids[j].size >= 20)
+          {
+            score += 50;
+          }
+          else
+          {
+            score += 100;
+          }
+          let newAsteroids = asteroids[j].break();
+          asteroids = asteroids.concat(newAsteroids);
+          asteroids.splice(j, 1);
+          lasers.splice(i,1);
+          checkLifeGain();
+          break;
+        }
+      }
+      
+    }    
+  }
+  for(let i = lasers.length - 1; i >= 0; i--)
+  {
+    for(let j = saucers.length - 1; j >=0; j--)
+      {
+        if(lasers[i].hits(saucers[j]) && lasers[i].laserType != LaserType.Enemy)
+        {
+          if(saucers[j].size == 70)
+          {
+            score += 200;
+          }
+          else if(saucers[j].size == 40)
+          {
+            score += 1000;
+          }
+          saucers.splice(i, 1);
+        }
+      }
+      if(lasers[i].hits(ship) && lasers[i].laserType != LaserType.Player)
+      {
+        lives--;
+        ship.respawn();
+      }
+  }
+}
