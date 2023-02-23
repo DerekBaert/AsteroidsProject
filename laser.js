@@ -1,9 +1,10 @@
 class Laser 
 {
-    constructor(shipPosition, shipHeading)
+    constructor(shipPosition, shipHeading, laserType)
     {
         this.position = createVector(shipPosition.x, shipPosition.y);
         this.velocity = p5.Vector.fromAngle(shipHeading);
+        this.laserType = laserType;
         this.velocity.mult(5);
     }
 
