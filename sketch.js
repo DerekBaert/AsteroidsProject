@@ -1,3 +1,5 @@
+// All sounds downloaded from https://mixkit.co/free-sound-effects/game/
+
 let ship;
 let asteroidCount = 5;
 let asteroids;
