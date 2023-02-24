@@ -5,7 +5,7 @@ class Asteroid extends GameObject
         super(position, size);    
         this.total = floor(random(5,15));
         this.offset = [];
-        this.velocity = createVector(floor(random(-1,1)), floor(random(-1,1)));
+        this.velocity = p5.Vector.random2D();
         this.velocity.mult(10 / this.size);
         console.log(`Size: ${this.size} Mult: ${1 / this.size} Velocity:${this.velocity}`);
         for(let i = 0; i < this.total; i++)
