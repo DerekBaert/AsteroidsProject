@@ -13,114 +13,80 @@ let smallSaucerInterval = 1000;
 let nextLife = 10000;
 let bigSaucerSize = 50;
 let smallSaucerSize = 25;
+let pause = false;
 
 function setup() 
 {
   createCanvas(600,600);
   ship = new Ship(createVector(width / 2, height / 2), 10);
-  for(let i = 0; i < asteroidCount / 2; i++)
-  {
-    let size = floor(random(10,40));
-    asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
-    asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
-  }  
+  generateAsteroids();
 }
 
 function draw() 
 {
-  noFill();
-  stroke(255);
-  background(0); 
-
-  if(score >= nextSaucer)
+  if(!pause)
   {
-    let saucerSize = bigSaucerSize;
-    if(score >= nextSmallSaucer)
-    {
-      saucerSize = smallSaucerSize;
-      nextSmallSaucer += smallSaucerInterval;
-    }
-    console.log(saucerSize);
-    let saucer = new Saucer(saucerSize);
-    saucers.push(saucer);
-    nextSaucer += saucerRate;
+    noFill();
+    stroke(255);
+    background(0); 
     
-  }
-
-  for(let i = 0; i < asteroids.length; i++)
-  {
-    if(asteroids[i].size >= 10)
+    if(lives > 0 && asteroids.length > 0)
     {
-      asteroids[i].display(); 
-      asteroids[i].update();
-
-      if(ship.hits(asteroids[i]))
-      {
-          lives--;
-          ship.respawn();
-      }
-
-      for(let j = saucers.length - 1; j >= 0; j--)
-      {
-        if(saucers[j].hits(asteroids[i]))
-        {
-          saucers.splice(j, 1);
-          console.log("Saucer Crashed");
-        }
-      }
-      
-    }    
+      handleScore();
+      handleAsteroids();         
+      handleLasers(playerLasers);
+      handleLasers(saucerLasers);
+      handleSaucers();  
+      ship.display();
+      ship.turn();
+      ship.update();  
+    }  
+    else if(lives <= 0)
+    {
+      push();
+        textAlign(CENTER);
+        fill(255);
+        textSize(50);
+        text("Game Over", width / 2, height /2);
+        text("Press [ENTER] to restart", width / 2, height /2 + 50);
+      pop();
+    }
     else
     {
-      asteroids.splice(i, 1);
+      push();
+        textAlign(CENTER);
+        fill(255);
+        textSize(50);
+        text("Congratulations!", width / 2, height /2);
+        text("Press [ENTER] to restart", width / 2, height /2 + 50);
+      pop();
+    }
+  
+    text(`Lives: ${lives}`, 20, 20);
+    text(`Score: ${score}`, width - 75, 20);
+  }  
+}
+
+function handleSaucers() {
+  for (let i = 0; i < saucers.length; i++) {
+    if (saucers[i].checkEdges()) {
+      saucers.splice(i, 1);
+    }
+
+    else {
+      saucers[i].display();
+      saucers[i].update();
+
+      if (ship.hits(saucers[i])) {
+        lives--;
+        ship.respawn();
+      }
+
+      if (frameCount % 60 === 0) {
+        saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
+      }
     }
   }
-
-  handleLasers(playerLasers);
-  handleLasers(saucerLasers);
-  
-  if(lives > 0)
-  {
-    ship.display();
-    ship.turn();
-    ship.update();
-    
-    for(let i = 0; i < saucers.length; i++)
-    {
-      if(saucers[i].checkEdges())
-      {
-        saucers.splice(i,1);
-      }
-      else
-      {
-        saucers[i].display();
-        saucers[i].update();
-
-        if(ship.hits(saucers[i]))
-        {
-          lives--;
-          ship.respawn();
-        }
-
-        if(frameCount % 60 === 0)
-        {
-          saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
-        }   
-      }       
-    }    
-  }  
-  else
-  {
-    push();
-      textAlign(CENTER);
-      fill(255);
-      textSize(50);
-      text("Game Over", width / 2, height /2);
-    pop();
-  }
-
-  text(`Lives: ${lives}`, 20, 20);
-  text(`Score: ${score}`, width - 75, 20);
 }
 
 function keyPressed() 
@@ -147,6 +113,29 @@ function keyPressed()
   {
     ship.warp();
   }
+  else if(keyCode == ESCAPE)
+  {
+    pause = !pause;
+  }
+  else if(keyCode == ENTER && lives <= 0)
+  {
+    reset();
+  }
+}
+
+function reset()
+{
+  asteroidCount = 5;
+  lives = 3;
+  score = 0;
+  nextSaucer = 250;
+  saucerRate = 250;
+  nextSmallSaucer = 1000;
+  smallSaucerInterval = 1000;
+  nextLife = 10000;
+  bigSaucerSize = 50;
+  smallSaucerSize = 25;
+  pause = false;
 }
 
 function keyReleased()
@@ -162,6 +151,16 @@ function checkLifeGain()
     lives += 1;
     nextLife += 10000;
   }
+}
+
+function generateAsteroids();
+{
+  for(let i = 0; i < asteroidCount / 2; i++)
+  {
+    let size = floor(random(10,40));
+    asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
+    asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
+  }  
 }
 
 function handleLasers(lasers)
@@ -203,6 +202,7 @@ function handleLasers(lasers)
       
     }    
   }
+
   for(let i = lasers.length - 1; i >= 0; i--)
   {
     for(let j = saucers.length - 1; j >=0; j--)
@@ -227,4 +227,54 @@ function handleLasers(lasers)
         ship.respawn();
       }
   }
+}
+
+function handleScore()
+{
+  if(score >= nextSaucer)
+  {
+    let saucerSize = bigSaucerSize;
+    if(score >= nextSmallSaucer)
+    {
+      saucerSize = smallSaucerSize;
+      nextSmallSaucer += smallSaucerInterval;
+    }
+    console.log(saucerSize);
+    let saucer = new Saucer(saucerSize);
+    saucers.push(saucer);
+    nextSaucer += saucerRate;
+    
+  }
+}
+
+function handleAsteroids()
+{
+  for(let i = 0; i < asteroids.length; i++)
+      {
+        if(asteroids[i].size >= 10)
+        {
+          asteroids[i].display(); 
+          asteroids[i].update();
+    
+          if(ship.hits(asteroids[i]))
+          {
+              lives--;
+              ship.respawn();
+          }
+    
+          for(let j = saucers.length - 1; j >= 0; j--)
+          {
+            if(saucers[j].hits(asteroids[i]))
+            {
+              saucers.splice(j, 1);
+              console.log("Saucer Crashed");
+            }
+          }
+          
+        }    
+        else
+        {
+          asteroids.splice(i, 1);
+        }
+      }
 }
