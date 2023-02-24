@@ -1,6 +1,6 @@
 let ship;
 let asteroidCount = 5;
-let asteroids = [];
+let asteroids;
 let playerLasers = [];
 let saucerLasers = [];
 let lives = 3;
@@ -65,6 +65,15 @@ function draw()
     text(`Lives: ${lives}`, 20, 20);
     text(`Score: ${score}`, width - 75, 20);
   }  
+  else
+  {
+    push();
+        textAlign(CENTER);
+        fill(255);
+        textSize(50);
+        text("Game Paused", width / 2, height /2);
+      pop();
+  }
 }
 
 function handleSaucers() {
@@ -117,14 +126,18 @@ function keyPressed()
   {
     pause = !pause;
   }
-  else if(keyCode == ENTER && lives <= 0)
+  else if((keyCode == ENTER && lives <= 0) || (keyCode == ENTER && asteroids.length <= 0))
   {
     reset();
+    generateAsteroids();
   }
 }
 
 function reset()
 {
+  playerLasers = [];
+  saucerLasers = [];
+  saucers = [];
   asteroidCount = 5;
   lives = 3;
   score = 0;
@@ -153,8 +166,9 @@ function checkLifeGain()
   }
 }
 
-function generateAsteroids();
+function generateAsteroids()
 {
+  asteroids = [];
   for(let i = 0; i < asteroidCount / 2; i++)
   {
     let size = floor(random(10,40));
