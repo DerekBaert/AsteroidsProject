@@ -64,7 +64,7 @@ function draw()
       push();
         textAlign(CENTER);
         fill(255);
-        textSize(50);
+        textSize(25);
         text("Game Over", width / 2, height /2);
         text("Press [ENTER] to restart", width / 2, height /2 + 50);
       pop();
@@ -74,21 +74,22 @@ function draw()
       push();
         textAlign(CENTER);
         fill(255);
-        textSize(50);
+        textSize(25);
         text("Congratulations!", width / 2, height /2);
         text("Press [ENTER] to restart", width / 2, height /2 + 50);
       pop();
     }
-  
-    text(`Lives: ${lives}`, 20, 20);
-    text(`Score: ${score}`, width - 75, 20);
+    textSize(15);
+    fill(255)
+    text(`Lives: ${lives}`, 50, 20);
+    text(`Score: ${score}`, width - 50, 20);
   }  
   else if(pause)
   {
     push();
         textAlign(CENTER);
         fill(255);
-        textSize(50);
+        textSize(25);
         text("Game Paused", width / 2, height /2);
       pop();
   }
@@ -193,7 +194,7 @@ function generateAsteroids()
   asteroids = [];
   for(let i = 0; i < asteroidCount / 2; i++)
   {
-    let size = floor(random(10,40));
+    let size = floor(random(20, 40));
     asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
     asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
   }  
