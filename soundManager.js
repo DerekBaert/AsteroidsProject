@@ -12,6 +12,38 @@ class SoundManager
         this.warp = loadSound("audio/Warp.wav");
     }
 
+    asteroidPlay()
+    {
+        if(!this.asteroid.isPlaying())
+        {
+            this.asteroid.play(); 
+        }       
+    }
+
+    enginePlay()
+    {
+        if(!this.engine.isPlaying())
+        {
+            this.engine.play();
+        }
+    }
+
+    gameOverPlay()
+    {
+        if(!this.gameOver.isPlaying())
+        {
+            this.gameOver.play();
+        }
+    }
+
+    laserPlay()
+    {
+        if(!this.laser.isPlaying())
+        {
+            this.laser.play();
+        }
+    }
+
     backgroundMusic()
     {
         this.music.play();
@@ -28,14 +60,34 @@ class SoundManager
         this.music.setVolume(0.15);
     }
 
-    asteroid()
+    saucerPlay()
     {
-
+        if(!this.saucer.isPlaying())
+        {
+            this.saucer.play();
+            this.music.loop();  
+        }    
+          
     }
 
-    engine()
+    saucerStop()
     {
-
+        this.saucer.stop();
     }
 
+    explodePlay()
+    {
+        if(!this.saucer.isPlaying())
+        {
+            this.shipExplode.play();
+        }        
+    }
+
+    warpPlay()
+    {
+        if(!this.warp.isPlaying())
+        {
+           this.warp.play(); 
+        }        
+    }
 }

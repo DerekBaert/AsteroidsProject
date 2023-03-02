@@ -20,6 +20,7 @@ let gameStart = false;
 let myFont;
 let playButton;
 let soundManager;
+let gameOverPlayed = false;
 
 function preload()
 {
@@ -59,6 +60,15 @@ function draw()
   noFill();
   stroke(255);
   handleAsteroids(); 
+
+  if(saucers.length > 0)
+  {
+    soundManager.saucerPlay();
+  }
+  else
+  {
+    soundManager.saucerStop();
+  }
   if(!gameStart)
   {
     textAlign(CENTER);
@@ -88,6 +98,11 @@ function draw()
         textAlign(CENTER);
         fill(255);
         textSize(25);
+        if(!gameOverPlayed)
+        {
+          soundManager.gameOverPlay();
+          gameOverPlayed = true;
+        }        
         text("Game Over", width / 2, height /2);
         text("Press [ENTER] to restart", width / 2, height /2 + 50);
       pop();
@@ -119,32 +134,13 @@ function draw()
   }
 }
 
-function handleSaucers() {
-  for (let i = 0; i < saucers.length; i++) {
-    if (saucers[i].checkEdges()) {
-      saucers.splice(i, 1);
-    }
-    else {
-      saucers[i].display();
-      saucers[i].update();
-
-      if (ship.hits(saucers[i])) {
-        lives--;
-        ship.respawn();
-      }
-
-      if (frameCount % 60 === 0) {
-        saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
-      }
-    }
-  }
-}
 
 function keyPressed() 
 {
 
   if(key == ' ')
   {
+    soundManager.laserPlay();
     playerLasers.push(new Laser(ship.position, ship.heading, LaserType.Player));
     ship.fire();
   }
@@ -158,10 +154,12 @@ function keyPressed()
   }
   else if (keyCode == UP_ARROW)
   {
+    soundManager.enginePlay();
     ship.boosting(true);
   }
   else if(keyCode == DOWN_ARROW)
   {
+    soundManager.warpPlay();
     ship.warp();
   }
   else if(keyCode == ESCAPE)
@@ -191,6 +189,7 @@ function reset()
   bigSaucerSize = 50;
   smallSaucerSize = 25;
   pause = false;
+  gameOverPlayed = false;
 }
 
 function keyReleased()
@@ -219,6 +218,34 @@ function generateAsteroids()
   }  
 }
 
+function handleSaucers() {
+  for (let i = 0; i < saucers.length; i++) 
+  {
+    if (saucers[i].checkEdges()) 
+    {
+      saucers.splice(i, 1);
+    }
+    else {
+      saucers[i].display();
+      saucers[i].update();
+
+      if (ship.hits(saucers[i])) 
+      {
+        soundManager.explodePlay();
+        lives--;
+        ship.respawn();
+      }
+
+      if (frameCount % 60 === 0) 
+      {
+        soundManager.laserPlay();
+        saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
+      }
+    }
+  }
+}
+
+
 function handleLasers(lasers)
 {
   for(let i = lasers.length - 1; i >= 0; i--)
@@ -238,6 +265,7 @@ function handleLasers(lasers)
       {
         if(lasers[i].hits(asteroids[j]))
         {
+          soundManager.asteroidPlay();
           if(asteroids[j].size == 40)
           {
             score += 20;
@@ -268,6 +296,7 @@ function handleLasers(lasers)
       {
         if(lasers[i].hits(saucers[j]) && lasers[i].laserType != LaserType.Enemy)
         {
+          soundManager.explodePlay();
           if(saucers[j].size == 60)
           {
             score += 200;
@@ -281,6 +310,7 @@ function handleLasers(lasers)
       }
       if(lasers[i].hits(ship) && lasers[i].laserType != LaserType.Player)
       {
+        soundManager.explodePlay();
         lasers.splice(i, 1);
         lives--;
         ship.respawn();
@@ -317,6 +347,7 @@ function handleAsteroids()
     
           if(ship.hits(asteroids[i]))
           {
+              soundManager.explodePlay();
               lives--;
               ship.respawn();
           }
@@ -325,6 +356,7 @@ function handleAsteroids()
           {
             if(saucers[j].hits(asteroids[i]))
             {
+              soundManager.explodePlay();
               saucers.splice(j, 1);
               console.log("Saucer Crashed");
             }
