@@ -16,22 +16,37 @@ let nextLife = 10000;
 let bigSaucerSize = 50;
 let smallSaucerSize = 25;
 let pause = false;
+let gameStart = false;
+let title;
+let myFont;
+
+function preload()
+{
+  myFont = loadFont("PixeloidSans.ttf");
+}
 
 function setup() 
 {
   createCanvas(600,600);
   frameRate(60);
   ship = new Ship(createVector(width / 2, height / 2), 10);
+  title = new TitleScreen(width / 2, height / 2, myFont);
   generateAsteroids();
 }
 
 function draw() 
 {
-  if(!pause)
+  background(0); 
+
+  if(!gameStart)
+  {
+    title.display();
+  }
+
+  if(!pause && gameStart)
   {
     noFill();
     stroke(255);
-    background(0); 
     
     if(lives > 0 && asteroids.length > 0)
     {
@@ -54,7 +69,7 @@ function draw()
         text("Press [ENTER] to restart", width / 2, height /2 + 50);
       pop();
     }
-    else
+    else 
     {
       push();
         textAlign(CENTER);
@@ -68,7 +83,7 @@ function draw()
     text(`Lives: ${lives}`, 20, 20);
     text(`Score: ${score}`, width - 75, 20);
   }  
-  else
+  else if(pause)
   {
     push();
         textAlign(CENTER);
@@ -133,6 +148,10 @@ function keyPressed()
   {
     reset();
     generateAsteroids();
+  }
+  else if(keyCode == ENTER && !gameStart)
+  {
+    gameStart = true;
   }
 }
 
