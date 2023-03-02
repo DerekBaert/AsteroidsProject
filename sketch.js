@@ -20,6 +20,7 @@ let pause = false;
 function setup() 
 {
   createCanvas(600,600);
+  frameRate(60);
   ship = new Ship(createVector(width / 2, height / 2), 10);
   generateAsteroids();
 }
@@ -183,14 +184,17 @@ function handleLasers(lasers)
 {
   for(let i = lasers.length - 1; i >= 0; i--)
   {
-    if(lasers[i].checkEdges())
+    if(!lasers[i].alive())
     {
       lasers.splice(i,1);
+      console.log("laserDead");
     }
     else
     {
+
       lasers[i].display(); 
       lasers[i].update();
+      lasers[i].checkEdges();
       for(let j = asteroids.length - 1; j >=0; j--)
       {
         if(lasers[i].hits(asteroids[j]))
