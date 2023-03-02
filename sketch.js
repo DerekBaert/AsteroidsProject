@@ -17,8 +17,8 @@ let bigSaucerSize = 50;
 let smallSaucerSize = 25;
 let pause = false;
 let gameStart = false;
-let title;
 let myFont;
+let playButton;
 
 function preload()
 {
@@ -30,8 +30,14 @@ function setup()
   createCanvas(600,600);
   frameRate(60);
   ship = new Ship(createVector(width / 2, height / 2), 10);
-  title = new TitleScreen(width / 2, height / 2, myFont);
   generateAsteroids();
+  playButton = createButton("Play");
+  playButton.position((width / 2) - 20, height / 2);
+  playButton.mouseClicked(function()
+  {
+    gameStart = true;
+    playButton.remove();
+  });
 }
 
 function draw() 
@@ -40,7 +46,12 @@ function draw()
 
   if(!gameStart)
   {
-    title.display();
+    textAlign(CENTER);
+    textFont(myFont);
+    fill(255);
+    textSize(50);
+    text("Asteroids", width / 2 , 100);
+    textSize(25);  
   }
 
   if(!pause && gameStart)
@@ -100,7 +111,6 @@ function handleSaucers() {
     if (saucers[i].checkEdges()) {
       saucers.splice(i, 1);
     }
-
     else {
       saucers[i].display();
       saucers[i].update();
@@ -149,10 +159,6 @@ function keyPressed()
   {
     reset();
     generateAsteroids();
-  }
-  else if(keyCode == ENTER && !gameStart)
-  {
-    gameStart = true;
   }
 }
 

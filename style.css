@@ -1,7 +1,28 @@
-html, body {
+  html, body 
+  {
     margin: 0;
     padding: 0;
   }
-  canvas {
+
+
+  @font-face 
+  {
+    font-family: pixelFont;
+    src: url(PixeloidSans.ttf);
+  }
+
+  canvas 
+  {
     display: block;
+  }
+
+  button
+  {
+    font-family: pixelFont;
+    font-size: 25px;
+    padding-left: 7px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    border-color: white;
   }
