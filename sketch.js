@@ -19,16 +19,28 @@ let pause = false;
 let gameStart = false;
 let myFont;
 let playButton;
+let soundManager;
 
 function preload()
 {
   myFont = loadFont("PixeloidSans.ttf");
+  soundManager = new SoundManager();
+  //soundFormats('wav');
+  // let asteroid = loadSound("audio/Asteroid.wav");
+  // let engine = loadSound("audio/Engine.wav");
+  // let gameOver = loadSound("audio/GameOver.wav");
+  // let laser = loadSound("audio/Laser.wav");
+  // let music = loadSound("audio/Music.wav");
+  // let saucer = loadSound("audio/Saucer.wav");
+  // let shipExplode = loadSound("audio/ShipExplode.wav");
+  // let warp = loadSound("audio/Warp.wav");
 }
 
 function setup() 
 {
   createCanvas(600,600);
   frameRate(60);
+  
   ship = new Ship(createVector(width / 2, height / 2), 10);
   generateAsteroids();
   playButton = createButton("Play");
@@ -37,13 +49,16 @@ function setup()
   {
     gameStart = true;
     playButton.remove();
+    soundManager.backgroundMusic();
   });
 }
 
 function draw() 
 {
   background(0); 
-
+  noFill();
+  stroke(255);
+  handleAsteroids(); 
   if(!gameStart)
   {
     textAlign(CENTER);
@@ -56,13 +71,10 @@ function draw()
 
   if(!pause && gameStart)
   {
-    noFill();
-    stroke(255);
-    
     if(lives > 0 && asteroids.length > 0)
     {
+      soundManager.gameResume();
       handleScore();
-      handleAsteroids();         
       handleLasers(playerLasers);
       handleLasers(saucerLasers);
       handleSaucers();  
@@ -97,6 +109,7 @@ function draw()
   }  
   else if(pause)
   {
+    soundManager.gamePause();
     push();
         textAlign(CENTER);
         fill(255);
