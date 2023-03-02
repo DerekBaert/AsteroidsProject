@@ -25,7 +25,13 @@ class SoundManager
         if(!this.engine.isPlaying())
         {
             this.engine.play();
+            this.engine.loop();
         }
+    }
+
+    engineStop()
+    {
+        this.engine.stop();
     }
 
     gameOverPlay()

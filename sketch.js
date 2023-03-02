@@ -196,6 +196,7 @@ function keyReleased()
 {
   ship.setRotation(0);
   ship.boosting(false);
+  soundManager.engineStop();
 }
 
 function checkLifeGain()
