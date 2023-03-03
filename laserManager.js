@@ -51,7 +51,7 @@ class LaserManager
             {
                 if(this.lasers[i].hits(saucerManager.saucers[j]) && this.lasers[i].laserType != LaserType.Enemy)
                 {
-                    console.log(`Saucer Hit ${saucerManager.saucers.length}`);
+                    //console.log(`Saucer Hit ${saucerManager.saucers.length}`);
                     soundManager.explodePlay();
                     if(saucerManager.saucers[j].size == 60)
                     {
@@ -62,7 +62,7 @@ class LaserManager
                         score += 1000;
                     }
                     saucerManager.saucers.splice(j, 1);
-                    console.log(`${saucerManager.saucers.length}`);
+                    //console.log(`${saucerManager.saucers.length}`);
                 }
             }
             if(this.lasers[i].hits(ship) && this.lasers[i].laserType != LaserType.Player)

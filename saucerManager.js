@@ -36,7 +36,7 @@ class SaucerManager
               ship.respawn();
             }
       
-            if (frameCount % 60 === 0) 
+            if (frameCount % 120 === 0) 
             {
               soundManager.laserPlay();
               laserManager.add(this.saucers[i].position, this.saucers[i].heading, LaserType.Enemy);

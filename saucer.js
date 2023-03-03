@@ -4,7 +4,7 @@ class Saucer extends GameObject
     {
         super(createVector(0 + size, random(0 + size, height / 2)), size);
         this.heading = 0;
-        this.velocity = createVector(random(1.5, 3), random(1, 2.5));
+        this.velocity = createVector(random(1, 1.5), random(1, 2));
         this.size = size;
 
         if (floor(random(2))) 
