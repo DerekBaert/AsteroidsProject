@@ -2,13 +2,13 @@
 
 let ship;
 let asteroidCount = 5;
-let asteroids;
+let asteroids = [];
 let playerLasers = [];
 let saucerLasers = [];
 let lives = 3;
 let score = 0;
 let saucers = [];
-let nextSaucer = 250;
+let nextSaucer = 0;
 let saucerRate = 250;
 let nextSmallSaucer = 1000;
 let smallSaucerInterval = 1000;
@@ -59,7 +59,6 @@ function draw()
   background(0); 
   noFill();
   stroke(255);
-  handleAsteroids(); 
 
   if(saucers.length > 0)
   {
@@ -71,6 +70,7 @@ function draw()
   }
   if(!gameStart)
   {
+    handleAsteroids(); 
     textAlign(CENTER);
     textFont(myFont);
     fill(255);
