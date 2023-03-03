@@ -1,20 +1,26 @@
 // All sounds downloaded from https://mixkit.co/free-sound-effects/game/
 
 let ship;
-let asteroidCount = 5;
-let asteroids = [];
-let playerLasers = [];
-let saucerLasers = [];
+// let asteroidCount = 5;
+// let asteroids;
+// let playerLasers = [];
+// let saucerLasers = [];
+// let saucers = [];
+let asteroidManager = new AsteroidManager();
+let saucerManager = new SaucerManager();
+let laserManager = new LaserManager();
+
 let lives = 3;
 let score = 0;
-let saucers = [];
-let nextSaucer = 0;
+let nextLife = 10000;
+
+let nextSaucer = 250;
 let saucerRate = 250;
 let nextSmallSaucer = 1000;
 let smallSaucerInterval = 1000;
-let nextLife = 10000;
 let bigSaucerSize = 50;
 let smallSaucerSize = 25;
+
 let pause = false;
 let gameStart = false;
 let myFont;
@@ -26,15 +32,6 @@ function preload()
 {
   myFont = loadFont("PixeloidSans.ttf");
   soundManager = new SoundManager();
-  //soundFormats('wav');
-  // let asteroid = loadSound("audio/Asteroid.wav");
-  // let engine = loadSound("audio/Engine.wav");
-  // let gameOver = loadSound("audio/GameOver.wav");
-  // let laser = loadSound("audio/Laser.wav");
-  // let music = loadSound("audio/Music.wav");
-  // let saucer = loadSound("audio/Saucer.wav");
-  // let shipExplode = loadSound("audio/ShipExplode.wav");
-  // let warp = loadSound("audio/Warp.wav");
 }
 
 function setup() 
@@ -43,7 +40,7 @@ function setup()
   frameRate(60);
   
   ship = new Ship(createVector(width / 2, height / 2), 10);
-  generateAsteroids();
+  asteroidManager.generateAsteroids();
   playButton = createButton("Play");
   playButton.position((width / 2) - 20, height / 2);
   playButton.mouseClicked(function()
@@ -60,14 +57,8 @@ function draw()
   noFill();
   stroke(255);
 
-  if(saucers.length > 0)
-  {
-    soundManager.saucerPlay();
-  }
-  else
-  {
-    soundManager.saucerStop();
-  }
+  saucerManager.update(soundManager);
+
   if(!gameStart)
   {
     handleAsteroids(); 
@@ -81,13 +72,14 @@ function draw()
 
   if(!pause && gameStart)
   {
-    if(lives > 0 && asteroids.length > 0)
+    if(lives > 0 && asteroidManager.asteroids.length > 0)
     {
+      asteroidManager.handleAsteroids(ship, soundManager, lives);
       soundManager.gameResume();
       handleScore();
-      handleLasers(playerLasers);
-      handleLasers(saucerLasers);
-      handleSaucers();  
+      laserManager.handleLasers(asteroidManager, soundManager, lives, saucerManager);
+      saucerManager.handleSaucers(ship, soundManager, lives, laserManager);  
+      checkLifeGain();
       ship.display();
       ship.turn();
       ship.update();  
@@ -141,7 +133,7 @@ function keyPressed()
   if(key == ' ')
   {
     soundManager.laserPlay();
-    playerLasers.push(new Laser(ship.position, ship.heading, LaserType.Player));
+    laserManager.add(ship.position, ship.heading, LaserType.Player);
     ship.fire();
   }
   else if(keyCode == RIGHT_ARROW) 
@@ -169,16 +161,14 @@ function keyPressed()
   else if((keyCode == ENTER && lives <= 0) || (keyCode == ENTER && asteroids.length <= 0))
   {
     reset();
-    generateAsteroids();
   }
 }
 
 function reset()
 {
-  playerLasers = [];
-  saucerLasers = [];
-  saucers = [];
-  asteroidCount = 5;
+  laserManager.reset();
+  saucerManager.reset();
+  asteroidManager.reset();
   lives = 3;
   score = 0;
   nextSaucer = 250;
@@ -190,6 +180,7 @@ function reset()
   smallSaucerSize = 25;
   pause = false;
   gameOverPlayed = false;
+  asteroidManager.generateAsteroids();
 }
 
 function keyReleased()
@@ -208,117 +199,6 @@ function checkLifeGain()
   }
 }
 
-function generateAsteroids()
-{
-  asteroids = [];
-  for(let i = 0; i < asteroidCount / 2; i++)
-  {
-    let size = floor(random(20, 40));
-    asteroids.push(new Asteroid(createVector(random(width * 0.75, width - size), random(size, height - size)), size));
-    asteroids.push(new Asteroid(createVector(random(0 , width * 0.25), random(size, height - size)), size));
-  }  
-}
-
-function handleSaucers() {
-  for (let i = 0; i < saucers.length; i++) 
-  {
-    if (saucers[i].checkEdges()) 
-    {
-      saucers.splice(i, 1);
-    }
-    else {
-      saucers[i].display();
-      saucers[i].update();
-
-      if (ship.hits(saucers[i])) 
-      {
-        soundManager.explodePlay();
-        lives--;
-        ship.respawn();
-      }
-
-      if (frameCount % 60 === 0) 
-      {
-        soundManager.laserPlay();
-        saucerLasers.push(new Laser(saucers[i].position, saucers[i].heading, LaserType.Enemy));
-      }
-    }
-  }
-}
-
-
-function handleLasers(lasers)
-{
-  for(let i = lasers.length - 1; i >= 0; i--)
-  {
-    if(!lasers[i].alive())
-    {
-      lasers.splice(i,1);
-      console.log("laserDead");
-    }
-    else
-    {
-
-      lasers[i].display(); 
-      lasers[i].update();
-      lasers[i].checkEdges();
-      for(let j = asteroids.length - 1; j >=0; j--)
-      {
-        if(lasers[i].hits(asteroids[j]))
-        {
-          soundManager.asteroidPlay();
-          if(asteroids[j].size == 40)
-          {
-            score += 20;
-          }
-          else if(asteroids[j].size >= 20)
-          {
-            score += 50;
-          }
-          else
-          {
-            score += 100;
-          }
-          let newAsteroids = asteroids[j].break();
-          asteroids = asteroids.concat(newAsteroids);
-          asteroids.splice(j, 1);
-          lasers.splice(i,1);
-          checkLifeGain();
-          break;
-        }
-      }
-      
-    }    
-  }
-
-  for(let i = lasers.length - 1; i >= 0; i--)
-  {
-    for(let j = saucers.length - 1; j >=0; j--)
-      {
-        if(lasers[i].hits(saucers[j]) && lasers[i].laserType != LaserType.Enemy)
-        {
-          soundManager.explodePlay();
-          if(saucers[j].size == 60)
-          {
-            score += 200;
-          }
-          else if(saucers[j].size == 30)
-          {
-            score += 1000;
-          }
-          saucers.splice(i, 1);
-        }
-      }
-      if(lasers[i].hits(ship) && lasers[i].laserType != LaserType.Player)
-      {
-        soundManager.explodePlay();
-        lasers.splice(i, 1);
-        lives--;
-        ship.respawn();
-      }
-  }
-}
-
 function handleScore()
 {
   if(score >= nextSaucer)
@@ -329,44 +209,9 @@ function handleScore()
       saucerSize = smallSaucerSize;
       nextSmallSaucer += smallSaucerInterval;
     }
-    console.log(saucerSize);
-    let saucer = new Saucer(saucerSize);
-    saucers.push(saucer);
-    nextSaucer += saucerRate;
-    
+    saucerManager.add(saucerSize);
+    nextSaucer += saucerRate;    
   }
 }
 
-function handleAsteroids()
-{
-  for(let i = 0; i < asteroids.length; i++)
-      {
-        if(asteroids[i].size >= 10)
-        {
-          asteroids[i].display(); 
-          asteroids[i].update();
-    
-          if(ship.hits(asteroids[i]))
-          {
-              soundManager.explodePlay();
-              lives--;
-              ship.respawn();
-          }
-    
-          for(let j = saucers.length - 1; j >= 0; j--)
-          {
-            if(saucers[j].hits(asteroids[i]))
-            {
-              soundManager.explodePlay();
-              saucers.splice(j, 1);
-              console.log("Saucer Crashed");
-            }
-          }
-          
-        }    
-        else
-        {
-          asteroids.splice(i, 1);
-        }
-      }
-}
+
