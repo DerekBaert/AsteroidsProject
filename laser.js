@@ -7,7 +7,7 @@ class Laser extends GameObject
         this.velocity = p5.Vector.fromAngle(shipHeading);
         this.laserType = laserType;
         this.velocity.mult(5);
-        this.timeToLive = 90;
+        this.timeToLive = 150;
     }
 
     update()

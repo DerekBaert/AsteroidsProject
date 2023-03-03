@@ -67,10 +67,8 @@ class Ship extends GameObject
 
     respawn()
     {
-        //lives--;
         this.position = createVector(width/2, height/2);
         this.velocity = createVector(0,0);
-        
     }
 
     warp()
