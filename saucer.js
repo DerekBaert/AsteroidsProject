@@ -64,7 +64,7 @@ class Saucer extends GameObject
 
     display()
     {
-        ellipse(this.position.x, this.position.y, this.size, this.size / 2);
+        ellipse(this.position.x, this.position.y, this.size * 1.5, this.size);
     }
 
 }

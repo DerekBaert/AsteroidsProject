@@ -33,6 +33,7 @@ class SaucerManager
             {
               soundManager.explodePlay();
               lives--;
+              trauma += addedTrauma * 1.5;
               ship.respawn();
             }
       

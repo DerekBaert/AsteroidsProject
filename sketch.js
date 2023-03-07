@@ -16,10 +16,9 @@ let nextLife = 10000;
 
 let nextSaucer = 250;
 let saucerRate = 250;
-let nextSmallSaucer = 1000;
-let smallSaucerInterval = 1000;
-let bigSaucerSize = 50;
-let smallSaucerSize = 25;
+let smallSaucerInterval = 750;
+let bigSaucerSize = 30;
+let smallSaucerSize = 15;
 
 let pause = false;
 let gameStart = false;
@@ -27,6 +26,8 @@ let myFont;
 let playButton;
 let soundManager;
 let gameOverPlayed = false;
+let trauma = 0;
+let addedTrauma = 10;
 
 function preload()
 {
@@ -53,76 +54,85 @@ function setup()
 
 function draw() 
 {
-  background(0); 
-  noFill();
-  stroke(255);
-
-  saucerManager.update(soundManager);
-
-  if(!gameStart)
-  {
-    textAlign(CENTER);
+  
+    background(0); 
+    noFill();
+    stroke(255);
     textFont(myFont);
-    fill(255);
-    textSize(50);
-    text("Asteroids", width / 2 , 100);
-    textSize(25);  
-  }
+  
+    
+    saucerManager.update(soundManager);
 
-  if(!pause && gameStart)
-  {
-    if(lives > 0 && asteroidManager.asteroids.length > 0)
+    if(!gameStart)
     {
-      asteroidManager.handleAsteroids(ship, soundManager, lives);
-      soundManager.gameResume();
-      handleScore();
-      laserManager.handleLasers(asteroidManager, soundManager, lives, saucerManager);
-      saucerManager.handleSaucers(ship, soundManager, lives, laserManager);  
-      checkLifeGain();
-      ship.display();
-      ship.turn();
-      ship.update();  
+      textAlign(CENTER);      
+      fill(255);
+      textSize(50);
+      text("Asteroids", width / 2 , 100);
+      textSize(25);  
+    }
+
+    if(!pause && gameStart)
+    {
+      if(lives > 0 && asteroidManager.asteroids.length > 0)
+      {
+        push();  
+          let cameraX =  trauma * noise(500); 
+          let cameraY =  trauma * noise(500); 
+          console.log(`${cameraX}, ${cameraY}`);
+          translate(cameraX, cameraY);
+          trauma = trauma > 0 ? trauma - 0.25 : trauma;
+          asteroidManager.handleAsteroids(ship, soundManager, lives);
+          soundManager.gameResume();
+          handleScore();
+          laserManager.handleLasers(asteroidManager, soundManager, lives, saucerManager);
+          saucerManager.handleSaucers(ship, soundManager, lives, laserManager);  
+          checkLifeGain();
+          ship.display();
+          ship.turn();
+          ship.update();  
+        pop();
+      }  
+      else if(lives <= 0)
+      {
+        push();
+          textAlign(CENTER);
+          fill(255);
+          textSize(25);
+          if(!gameOverPlayed)
+          {
+            soundManager.gameOverPlay();
+            gameOverPlayed = true;
+          }        
+          text("Game Over", width / 2, height /2);
+          text("Press [ENTER] to restart", width / 2, height /2 + 50);
+        pop();
+      }
+      else 
+      {
+        push();
+          textAlign(CENTER);
+          fill(255);
+          textSize(25);
+          text("Congratulations!", width / 2, height /2);
+          text("Press [ENTER] to restart", width / 2, height /2 + 50);
+        pop();
+      }
+      textSize(15);
+      fill(255)
+      text(`Lives: ${lives}`, 50, 20);
+      text(`Score: ${score}`, width - 75, 20);
     }  
-    else if(lives <= 0)
+    else if(pause)
     {
+      soundManager.gamePause();
       push();
-        textAlign(CENTER);
-        fill(255);
-        textSize(25);
-        if(!gameOverPlayed)
-        {
-          soundManager.gameOverPlay();
-          gameOverPlayed = true;
-        }        
-        text("Game Over", width / 2, height /2);
-        text("Press [ENTER] to restart", width / 2, height /2 + 50);
-      pop();
-    }
-    else 
-    {
-      push();
-        textAlign(CENTER);
-        fill(255);
-        textSize(25);
-        text("Congratulations!", width / 2, height /2);
-        text("Press [ENTER] to restart", width / 2, height /2 + 50);
-      pop();
-    }
-    textSize(15);
-    fill(255)
-    text(`Lives: ${lives}`, 50, 20);
-    text(`Score: ${score}`, width - 50, 20);
-  }  
-  else if(pause)
-  {
-    soundManager.gamePause();
-    push();
         textAlign(CENTER);
         fill(255);
         textSize(25);
         text("Game Paused", width / 2, height /2);
       pop();
-  }
+    }
 }
 
 
@@ -200,16 +210,17 @@ function checkLifeGain()
 
 function handleScore()
 {
+  
   if(score >= nextSaucer)
   {
     let saucerSize = bigSaucerSize;
-    if(score >= nextSmallSaucer)
+    nextSaucer += saucerRate;  
+    if(score % smallSaucerInterval == 0)
     {
       saucerSize = smallSaucerSize;
-      nextSmallSaucer += smallSaucerInterval;
     }
     saucerManager.add(saucerSize);
-    nextSaucer += saucerRate;    
+      
   }
 }
 

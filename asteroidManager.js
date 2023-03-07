@@ -3,7 +3,7 @@ class AsteroidManager
     constructor()
     {
         this.asteroids = [];
-        this.asteroidCount = 5;
+        this.asteroidCount = 12;
     }
 
     generateAsteroids()
@@ -30,6 +30,7 @@ class AsteroidManager
                     {
                         soundManager.explodePlay();
                         lives--;
+                        trauma += addedTrauma * 1.5;
                         ship.respawn();
                     }
                 
@@ -39,6 +40,7 @@ class AsteroidManager
                         {
                             soundManager.explodePlay();
                             saucerManager.saucers.splice(j, 1);
+                            trauma += addedTrauma / 2;
                         }
                     }            
                 }    

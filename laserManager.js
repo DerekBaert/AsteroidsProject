@@ -26,14 +26,17 @@ class LaserManager
                         if(asteroidManager.asteroids[j].size == 40)
                         {
                             score += 20;
+                            trauma += addedTrauma / 4;
                         }
                         else if(asteroidManager.asteroids[j].size >= 20)
                         {
                             score += 50;
+                            trauma += addedTrauma / 2;
                         }
                         else
                         {
                             score += 100;
+                            trauma += addedTrauma / 2;
                         }
                         let newAsteroids = asteroidManager.asteroids[j].break();
                         asteroidManager.asteroids = asteroidManager.asteroids.concat(newAsteroids);
@@ -51,18 +54,17 @@ class LaserManager
             {
                 if(this.lasers[i].hits(saucerManager.saucers[j]) && this.lasers[i].laserType != LaserType.Enemy)
                 {
-                    //console.log(`Saucer Hit ${saucerManager.saucers.length}`);
                     soundManager.explodePlay();
-                    if(saucerManager.saucers[j].size == 60)
+                    if(saucerManager.saucers[j].size == bigSaucerSize)
                     {
                         score += 200;
                     }
-                    else if(saucerManager.saucers[j].size == 30)
+                    else if(saucerManager.saucers[j].size == smallSaucerSize)
                     {
                         score += 1000;
                     }
                     saucerManager.saucers.splice(j, 1);
-                    //console.log(`${saucerManager.saucers.length}`);
+                    trauma += addedTrauma;
                 }
             }
             if(this.lasers[i].hits(ship) && this.lasers[i].laserType != LaserType.Player)
@@ -71,6 +73,7 @@ class LaserManager
                 this.lasers.splice(i, 1);
                 lives--;
                 ship.respawn();
+                trauma += addedTrauma * 1.5;
             }
         }
     }

@@ -7,7 +7,7 @@ class Asteroid extends GameObject
         this.offset = [];
         this.velocity = p5.Vector.random2D();
         this.velocity.mult(10 / this.size);
-        console.log(`Size: ${this.size} Mult: ${1 / this.size} Velocity:${this.velocity}`);
+        //console.log(`Size: ${this.size} Mult: ${1 / this.size} Velocity:${this.velocity}`);
         for(let i = 0; i < this.total; i++)
         {
             this.offset[i] = random(-this.size / 2, this.size / 2);
