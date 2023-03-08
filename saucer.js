@@ -24,7 +24,7 @@ class Saucer extends GameObject
         }
         else
         {
-            if(score < 1000)
+            if(score <= 1000)
             {
                 this.aimOffset = 0.3;
             }
