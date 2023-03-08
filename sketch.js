@@ -173,9 +173,6 @@ function reset()
   asteroidManager.reset();
   lives = 3;
   score = 0;
-  nextSaucer = 250;
-  saucerRate = 250;
-  smallSaucerInterval = 750;
   nextLife = 10000;
   bigSaucerSize = 50;
   smallSaucerSize = 25;
