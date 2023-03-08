@@ -3,18 +3,34 @@ class SaucerManager
     constructor()
     {
         this.saucers = [];
+        this.nextSaucer = 500;
+        this.saucerRate = 500;
+        this.nextSmallSaucer = 1000;
+        this.smallSaucerInterval = 1000;
     }
 
-    update(soundManager)
+    update(soundManager, score)
     {
-        if(this.saucers.length > 0)
+      if(this.saucers.length > 0)
+      {
+          soundManager.saucerPlay();
+      }
+      else
+      {
+          soundManager.saucerStop();
+      }
+
+      if(score >= this.nextSaucer)
+      {
+        let saucerSize = bigSaucerSize;
+        this.nextSaucer += this.saucerRate;
+        if(score >= this.nextSmallSaucer)
         {
-            soundManager.saucerPlay();
+          saucerSize = smallSaucerSize;
+          this.nextSmallSaucer += this.smallSaucerInterval;           
         }
-        else
-        {
-            soundManager.saucerStop();
-        }
+        this.add(saucerSize);
+      }
     }
 
     handleSaucers()
@@ -49,6 +65,11 @@ class SaucerManager
     reset()
     {
         this.saucers = [];
+        this.nextSaucer = 250;
+        this.saucerRate = 250;
+        this.smallSaucerInterval = 750;
+        this.bigSaucerSize = 30;
+        this.smallSaucerSize = 15;
     }
 
     add(saucerSize)

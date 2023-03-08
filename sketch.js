@@ -1,11 +1,7 @@
 // All sounds downloaded from https://mixkit.co/free-sound-effects/game/
 
 let ship;
-// let asteroidCount = 5;
-// let asteroids;
-// let playerLasers = [];
-// let saucerLasers = [];
-// let saucers = [];
+
 let asteroidManager = new AsteroidManager();
 let saucerManager = new SaucerManager();
 let laserManager = new LaserManager();
@@ -14,9 +10,6 @@ let lives = 3;
 let score = 0;
 let nextLife = 10000;
 
-let nextSaucer = 250;
-let saucerRate = 250;
-let smallSaucerInterval = 750;
 let bigSaucerSize = 30;
 let smallSaucerSize = 15;
 
@@ -60,8 +53,7 @@ function draw()
     stroke(255);
     textFont(myFont);
   
-    
-    saucerManager.update(soundManager);
+    saucerManager.update(soundManager, score);
 
     if(!gameStart)
     {
@@ -79,15 +71,16 @@ function draw()
         push();  
           let cameraX =  trauma * noise(500); 
           let cameraY =  trauma * noise(500); 
-          console.log(`${cameraX}, ${cameraY}`);
           translate(cameraX, cameraY);
           trauma = trauma > 0 ? trauma - 0.25 : trauma;
+
           asteroidManager.handleAsteroids(ship, soundManager, lives);
           soundManager.gameResume();
-          handleScore();
           laserManager.handleLasers(asteroidManager, soundManager, lives, saucerManager);
           saucerManager.handleSaucers(ship, soundManager, lives, laserManager);  
+
           checkLifeGain();
+          
           ship.display();
           ship.turn();
           ship.update();  
@@ -182,13 +175,13 @@ function reset()
   score = 0;
   nextSaucer = 250;
   saucerRate = 250;
-  nextSmallSaucer = 1000;
-  smallSaucerInterval = 1000;
+  smallSaucerInterval = 750;
   nextLife = 10000;
   bigSaucerSize = 50;
   smallSaucerSize = 25;
   pause = false;
   gameOverPlayed = false;
+  trauma = 0;
   asteroidManager.generateAsteroids();
 }
 
@@ -207,21 +200,4 @@ function checkLifeGain()
     nextLife += 10000;
   }
 }
-
-function handleScore()
-{
-  
-  if(score >= nextSaucer)
-  {
-    let saucerSize = bigSaucerSize;
-    nextSaucer += saucerRate;  
-    if(score % smallSaucerInterval == 0)
-    {
-      saucerSize = smallSaucerSize;
-    }
-    saucerManager.add(saucerSize);
-      
-  }
-}
-
 
