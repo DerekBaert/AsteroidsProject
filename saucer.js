@@ -37,7 +37,10 @@ class Saucer extends GameObject
 
         // Set heading to the direction the ship is in, then offset this by the current aim offset
         this.heading = atan2(ship.position.x - this.position.x, this.position.y - ship.position.y) - PI / 2;
-        this.adjustAim();
+        if(this.size != bigSaucerSize)
+        {
+            this.adjustAim();
+        }        
         if(this.aimOffset > 0)
         {
             this.heading += random(-this.aimOffset, this.aimOffset);

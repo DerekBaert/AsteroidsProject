@@ -3,10 +3,10 @@ class SaucerManager
     constructor()
     {
         this.saucers = [];
-        this.nextSaucer = 500;
-        this.saucerRate = 500;
-        this.nextSmallSaucer = 1000;
-        this.smallSaucerInterval = 1000;
+        this.nextSaucer = 1000;
+        this.saucerRate = 1000;
+        this.nextSmallSaucer = 2500;
+        this.smallSaucerInterval = 2500;
     }
 
     // Update saucers in array
