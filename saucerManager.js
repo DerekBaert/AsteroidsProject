@@ -13,7 +13,7 @@ class SaucerManager
     update(soundManager, score)
     {
       // If a saucer is in play, play the saucer sound
-      if(this.saucers.length > 0)
+      if(this.saucers.length > 0 && lives > 0)
       {
           soundManager.saucerPlay();
       }

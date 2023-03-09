@@ -48,11 +48,6 @@ class SoundManager
         {
             this.gameOver.play();
         }
-        
-        if(this.saucer.isPlaying())
-        {
-            this.saucerStop();
-        }
     }
 
     // Plays laser firing sound
@@ -81,7 +76,7 @@ class SoundManager
         this.music.setVolume(0.15);
         if(this.saucer.isPlaying())
         {
-            this.saucer.setVolume(0);
+            this.saucer.setVolume(0.15);
         }
     }
 
@@ -91,7 +86,7 @@ class SoundManager
         this.music.setVolume(0.75);
         if(this.saucer.isPlaying())
         {
-            this.saucer.setVolume(1);
+            this.saucer.setVolume(0.75);
         }
     }
 
@@ -100,6 +95,7 @@ class SoundManager
     {
         if(!this.saucer.isPlaying())
         {
+            this.saucer.setVolume(0.75);
             this.saucer.play();
             this.saucer.loop();  
         }    
@@ -128,9 +124,6 @@ class SoundManager
     // Plays warp sound effect
     warpPlay()
     {
-        if(!this.warp.isPlaying())
-        {
-           this.warp.play(); 
-        }        
+        this.warp.play();        
     }
 }
