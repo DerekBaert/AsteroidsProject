@@ -48,6 +48,11 @@ class SoundManager
         {
             this.gameOver.play();
         }
+        
+        if(this.saucer.isPlaying())
+        {
+            this.saucerStop();
+        }
     }
 
     // Plays laser firing sound
@@ -74,12 +79,20 @@ class SoundManager
     gamePause()
     {
         this.music.setVolume(0.15);
+        if(this.saucer.isPlaying())
+        {
+            this.saucer.setVolume(0);
+        }
     }
 
     // Resets game music to normal volume
     gameResume()
     {
         this.music.setVolume(0.75);
+        if(this.saucer.isPlaying())
+        {
+            this.saucer.setVolume(1);
+        }
     }
 
     // Plays saucer sound on loop
@@ -88,7 +101,7 @@ class SoundManager
         if(!this.saucer.isPlaying())
         {
             this.saucer.play();
-            this.music.loop();  
+            this.saucer.loop();  
         }    
           
     }
@@ -108,6 +121,7 @@ class SoundManager
         if(!this.shipExplode.isPlaying())
         {
             this.shipExplode.play();
+            this.saucerStop();
         }        
     }
 

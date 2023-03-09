@@ -65,7 +65,7 @@ function draw()
       textAlign(CENTER);      
       fill(255);
       textSize(50);
-      text("Asteroids", width / 2 , 100);
+      text("Space Junk", width / 2 , 100);
       textSize(25);  
     }
 
