@@ -22,11 +22,11 @@ class Saucer extends GameObject
         // Set initial aim offset based on size
         if(this.size == bigSaucerSize)
         {
-            this.aimOffset = 10;
+            this.aimOffset = 1;
         }
         else
         {
-            this.aimOffset = 3;             
+            this.aimOffset = 0.75;             
         }
     }
 
@@ -65,17 +65,17 @@ class Saucer extends GameObject
     {
         if(score <= 1000)
         {
-            this.aimOffset = 3;
+            this.aimOffset = 0.75;
         }
     
         if(score > 1000)
         {
-            this.aimOffset = 1;
+            this.aimOffset = 0.5;
         }
     
         if(score > 1500)
         {
-            this.aimOffset = 0.5;
+            this.aimOffset = 0.25;
         }
     
         if(score > 2000)

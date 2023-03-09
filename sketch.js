@@ -127,7 +127,6 @@ function draw()
       // If there are no more asteroids, spawn a new set
       else if(asteroidManager.asteroids.length <= 0)
       {
-        asteroidManager.asteroidCount += 2;
         asteroidManager.generateAsteroids();
       }
       // Displays lives and score while game is unpaused and started

@@ -3,7 +3,7 @@ class AsteroidManager
     constructor()
     {
         this.asteroids = [];
-        this.asteroidCount = 4;
+        this.asteroidCount = 8;
     }
 
     // Repopulates array with asteroids
