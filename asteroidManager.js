@@ -22,32 +22,38 @@ class AsteroidManager
     handleAsteroids()
     {
         for(let i = 0; i < this.asteroids.length; i++)
-            {
+        {
                 // If asteroid size is larger than 10, update, display and check for collisions
-                if(this.asteroids[i].size >= 10)
-                {
-                    this.asteroids[i].display(); 
-                    this.asteroids[i].update();
+            if(this.asteroids[i].size >= 10)
+            {
+                this.asteroids[i].display(); 
+                this.asteroids[i].update();
             
-                    // Check if ship has crashed into asteroid
-                    if(ship.hits(this.asteroids[i]))
-                    {
-                        soundManager.explodePlay();
-                        lives--;
-                        trauma += addedTrauma * 1.5;
-                        ship.respawn();
-                    }
+                // Check if ship has crashed into asteroid
+                if(ship.hits(this.asteroids[i]))
+                {
+                    asteroidManager.asteroids = asteroidManager.asteroids.concat(this.asteroids[i].break());
+                    this.asteroids.splice(i,1);
+                    soundManager.explodePlay();
+                    lives--;
+                    trauma += addedTrauma * 1.5;
+                    ship.respawn();
+                    break;
+                }
                 
-                    // Check if saucer has crashed into asteroid
-                    for(let j = saucerManager.saucers.length - 1; j >= 0; j--)
+                // Check if saucer has crashed into asteroid
+                for(let j = saucerManager.saucers.length - 1; j >= 0; j--)
+                {
+                    if(saucerManager.saucers[j].hits(this.asteroids[i]))
                     {
-                        if(saucerManager.saucers[j].hits(this.asteroids[i]))
-                        {
-                            soundManager.explodePlay();
-                            saucerManager.saucers.splice(j, 1);
-                            trauma += addedTrauma / 2;
-                        }
-                    }            
+                        asteroidManager.asteroids = asteroidManager.asteroids.concat(this.asteroids[i].break());
+                        this.asteroids.splice(i,1);
+                        soundManager.explodePlay();
+                        saucerManager.saucers.splice(j, 1);
+                        trauma += addedTrauma / 2;
+                        break;
+                    }
+                }            
                 }    
                 // If asteroid is smaller than 10, remove from array
                 else
