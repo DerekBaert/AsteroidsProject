@@ -4,9 +4,9 @@ class GameObject
     {
         this.position = position;
         this.size = size;
-        
     }
 
+    // Checks if the object is over the edge of the screen
     checkEdges()
     {
         if(this.position.x > width + this.size)

@@ -3,9 +3,10 @@ class AsteroidManager
     constructor()
     {
         this.asteroids = [];
-        this.asteroidCount = 12;
+        this.asteroidCount = 4;
     }
 
+    // Repopulates array with asteroids
     generateAsteroids()
     {
         this.asteroids = [];
@@ -17,15 +18,18 @@ class AsteroidManager
         }  
     }
 
+    // Handles behaviours for all asteroids
     handleAsteroids()
     {
         for(let i = 0; i < this.asteroids.length; i++)
             {
+                // If asteroid size is larger than 10, update, display and check for collisions
                 if(this.asteroids[i].size >= 10)
                 {
                     this.asteroids[i].display(); 
                     this.asteroids[i].update();
             
+                    // Check if ship has crashed into asteroid
                     if(ship.hits(this.asteroids[i]))
                     {
                         soundManager.explodePlay();
@@ -34,6 +38,7 @@ class AsteroidManager
                         ship.respawn();
                     }
                 
+                    // Check if saucer has crashed into asteroid
                     for(let j = saucerManager.saucers.length - 1; j >= 0; j--)
                     {
                         if(saucerManager.saucers[j].hits(this.asteroids[i]))
@@ -44,6 +49,7 @@ class AsteroidManager
                         }
                     }            
                 }    
+                // If asteroid is smaller than 10, remove from array
                 else
                 {
                     this.asteroids.splice(i, 1);
@@ -51,9 +57,10 @@ class AsteroidManager
             }
     }
 
+    // Resets to defaults
     reset()
     {
         this.asteroids = [];
-        this.asteroidCount = 5;
+        this.asteroidCount = 4;
     }
 }

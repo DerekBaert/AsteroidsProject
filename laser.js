@@ -10,12 +10,14 @@ class Laser extends GameObject
         this.timeToLive = 90;
     }
 
+    // Adds velocity, and ticks down the player's time to live
     update()
     {
         this.position.add(this.velocity);
         this.timeToLive = max(this.timeToLive - 1, 0); 
     }
 
+    // Displays laser on screen
     display()
     {
         push();
@@ -25,12 +27,14 @@ class Laser extends GameObject
         pop();
     }
 
+    // Checks if the laser has hit an object
     hits(object)
     {
         let distance = dist(this.position.x, this.position.y, object.position.x, object.position.y);
         return distance < object.size;        
     }
 
+    // Checks if the laser's time to live has run out
     alive()
     {
         return this.timeToLive != 0;

@@ -7,36 +7,39 @@ class Asteroid extends GameObject
         this.offset = [];
         this.velocity = p5.Vector.random2D();
         this.velocity.mult(10 / this.size);
-        //console.log(`Size: ${this.size} Mult: ${1 / this.size} Velocity:${this.velocity}`);
+
         for(let i = 0; i < this.total; i++)
         {
             this.offset[i] = random(-this.size / 2, this.size / 2);
         }
     }
 
+    // Update position and check edges
     update()
     {
         this.position.add(this.velocity);
         super.checkEdges();
     }
 
+    // Display asteroid
     display()
     {
         push();
             translate(this.position.x, this.position.y);
             beginShape();
-            for(let i = 0; i < this.total; i++)
-            {
-                let angle = map(i, 0, this.total, 0, TWO_PI);
-                let size = this.size + this.offset[i];
-                let x = size * cos(angle);
-                let y = size * sin(angle);
-                vertex(x, y);
-            }
+                for(let i = 0; i < this.total; i++)
+                {
+                    let angle = map(i, 0, this.total, 0, TWO_PI);
+                    let size = this.size + this.offset[i];
+                    let x = size * cos(angle);
+                    let y = size * sin(angle);
+                    vertex(x, y);
+                }
             endShape(CLOSE);
         pop();
     }
 
+    // Breaks asteroid into two smaller asteroids, and returns them as an array
     break()
     {
         let newAsteroids = [];

@@ -12,6 +12,7 @@ class SoundManager
         this.warp = loadSound("audio/Warp.wav");
     }
 
+    // Plays asteroid hit sound
     asteroidPlay()
     {
         if(!this.asteroid.isPlaying())
@@ -20,6 +21,7 @@ class SoundManager
         }       
     }
 
+    // Plays engine firing sound on a loop
     enginePlay()
     {
         if(!this.engine.isPlaying())
@@ -29,19 +31,26 @@ class SoundManager
         }
     }
 
+    // Stops engine sound
     engineStop()
     {
         this.engine.stop();
     }
 
+    // Plays game over music, stops background music
     gameOverPlay()
     {
+        if(this.music.isPlaying())
+        {
+            this.music.stop();
+        }
         if(!this.gameOver.isPlaying())
         {
             this.gameOver.play();
         }
     }
 
+    // Plays laser firing sound
     laserPlay()
     {
         if(!this.laser.isPlaying())
@@ -50,22 +59,30 @@ class SoundManager
         }
     }
 
+    // Plays background music on loop
     backgroundMusic()
     {
-        this.music.play();
-        this.music.loop();
+        if(!this.music.isPlaying())
+        {
+            this.music.setVolume(0.75);
+            this.music.play();
+            this.music.loop();
+        }        
     }
 
-    gameResume()
-    {
-        this.music.setVolume(0.75);
-    }
-
+    // Turns music volume down when game is paused
     gamePause()
     {
         this.music.setVolume(0.15);
     }
 
+    // Resets game music to normal volume
+    gameResume()
+    {
+        this.music.setVolume(0.75);
+    }
+
+    // Plays saucer sound on loop
     saucerPlay()
     {
         if(!this.saucer.isPlaying())
@@ -76,19 +93,25 @@ class SoundManager
           
     }
 
+    // Stops saucer sound from playing
     saucerStop()
     {
-        this.saucer.stop();
+        if(this.saucer.isPlaying())
+        {
+           this.saucer.stop(); 
+        }        
     }
 
+    // Plays explosion sound
     explodePlay()
     {
-        if(!this.saucer.isPlaying())
+        if(!this.shipExplode.isPlaying())
         {
             this.shipExplode.play();
         }        
     }
 
+    // Plays warp sound effect
     warpPlay()
     {
         if(!this.warp.isPlaying())

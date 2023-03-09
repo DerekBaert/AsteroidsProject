@@ -22,17 +22,20 @@ let gameOverPlayed = false;
 let trauma = 0;
 let addedTrauma = 10;
 
+// Preload music and font
 function preload()
 {
   myFont = loadFont("PixeloidSans.ttf");
   soundManager = new SoundManager();
 }
 
+
 function setup() 
 {
   createCanvas(600,600);
   frameRate(60);
   
+  // Create ship object and generate asteroids
   ship = new Ship(createVector(width / 2, height / 2), 10);
   asteroidManager.generateAsteroids();
   playButton = createButton("Play");
@@ -53,8 +56,10 @@ function draw()
     stroke(255);
     textFont(myFont);
   
+    // Update saucers
     saucerManager.update(soundManager, score);
 
+    // Display title screen if game hasn't started
     if(!gameStart)
     {
       textAlign(CENTER);      
@@ -64,28 +69,46 @@ function draw()
       textSize(25);  
     }
 
+    // If score has hit or exceeded a million, a winner is you
+    if(score >= 1000000)
+    {
+      pause = true;
+      push();
+        textAlign(CENTER);
+        fill(255);
+        textSize(25);
+        text("Congratulations!", width / 2, height /2);
+        text("Press [ENTER] to restart", width / 2, height /2 + 50);
+      pop();
+    }
+
     if(!pause && gameStart)
     {
+      // If player has not run out of lives and there are still asteroids
       if(lives > 0 && asteroidManager.asteroids.length > 0)
       {
         push();  
+          // Handle any screen shake
           let cameraX =  trauma * noise(500); 
           let cameraY =  trauma * noise(500); 
           translate(cameraX, cameraY);
           trauma = trauma > 0 ? trauma - 0.25 : trauma;
+          checkLifeGain();
 
+          // Managers handle their arrays
           asteroidManager.handleAsteroids(ship, soundManager, lives);
-          soundManager.gameResume();
           laserManager.handleLasers(asteroidManager, soundManager, lives, saucerManager);
           saucerManager.handleSaucers(ship, soundManager, lives, laserManager);  
 
-          checkLifeGain();
+          // Set game sound to default
+          soundManager.gameResume();
           
+          // Update and display ship
           ship.display();
-          ship.turn();
           ship.update();  
         pop();
       }  
+      // If player has run out of lives, trigger game over
       else if(lives <= 0)
       {
         push();
@@ -101,22 +124,20 @@ function draw()
           text("Press [ENTER] to restart", width / 2, height /2 + 50);
         pop();
       }
-      else 
+      // If there are no more asteroids, spawn a new set
+      else if(asteroidManager.asteroids.length <= 0)
       {
-        push();
-          textAlign(CENTER);
-          fill(255);
-          textSize(25);
-          text("Congratulations!", width / 2, height /2);
-          text("Press [ENTER] to restart", width / 2, height /2 + 50);
-        pop();
+        asteroidManager.asteroidCount += 2;
+        asteroidManager.generateAsteroids();
       }
+      // Displays lives and score while game is unpaused and started
       textSize(15);
       fill(255)
       text(`Lives: ${lives}`, 50, 20);
       text(`Score: ${score}`, width - 75, 20);
     }  
-    else if(pause)
+    // If game is not won and pause is set to true, display pause screen and turn down sound
+    else if(pause && score < 1000000)
     {
       soundManager.gamePause();
       push();
@@ -128,10 +149,9 @@ function draw()
     }
 }
 
-
+// Handles key pressed events
 function keyPressed() 
 {
-
   if(key == ' ')
   {
     soundManager.laserPlay();
@@ -166,6 +186,7 @@ function keyPressed()
   }
 }
 
+// Resets variables to defaults, and resets manager objects
 function reset()
 {
   laserManager.reset();
@@ -182,13 +203,23 @@ function reset()
   asteroidManager.generateAsteroids();
 }
 
+// Stops respective functions when certain keys are released
 function keyReleased()
 {
-  ship.setRotation(0);
-  ship.boosting(false);
-  soundManager.engineStop();
+  // Stops engine firing when up arrow is released
+  if(keyCode == UP_ARROW)
+  {
+    ship.boosting(false);
+    soundManager.engineStop();
+  }
+  // Stops rotation when left or right arrow keys are released
+  else if(keyCode == LEFT_ARROW || keyCode == RIGHT_ARROW)
+  {
+    ship.setRotation(0);
+  }
 }
 
+// Checks if player has high enough score to gain a life
 function checkLifeGain()
 {
   if(score > nextLife)
