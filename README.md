@@ -1,5 +1,19 @@
 # Asteroids
 
-This is a recode of the classic arcade game asteroids using the p5.js framework
+Recode of the arcade classic Asteroids made for my applied math class.
 
-Rotate the ship with the left and right arrow keys, and accelerate with the up arrow key. Shoot with spacebar, and press the down arrow key to teleport to a random spot on the screen. 
+Controls:
+
+**Up arrow:** Fire thrusters
+
+**Left and Right arrows:** Rotate left or right
+
+**Down arrow:** Warp to random location on screen
+
+**Spacebar:** Fire laser
+
+**Escape:** Pause game
+
+
+
+Music and sound effects sourced from https://mixkit.co/free-sound-effects/game/
