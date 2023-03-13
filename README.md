@@ -1,4 +1,4 @@
-# Asteroids
+# Space Junk
 
 Recode of the arcade classic Asteroids made for my applied math class.
 
